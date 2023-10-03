@@ -60,15 +60,14 @@ class PostControllerTest {
     @Test
     @DisplayName("/posts 요청 시 글 제목은 필수값입니다.")
     void test1() throws Exception {
-        // 글 제목
-        // 글 내용
-
         // expected
         mockMvc.perform(post("/posts")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"title\": \"\", \"content\": \"글 내용입니다.\"}"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title").value("타이틀을 입력해주세요."))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("400"))
+                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
+                .andExpect(jsonPath("$.validation.title").value("타이틀을 입력해주세요."))
                 .andDo(print());
     }
 }

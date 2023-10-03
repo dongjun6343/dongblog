@@ -33,7 +33,7 @@ public class PostController {
     // GET, POST, DELETE, PATCH, DELETE, OPTIONS, HEAD, TRACE, CONNECT
     // 글 등록
     @PostMapping("/posts")
-    public Map<String, String> post(@RequestBody @Valid PostCreate params, BindingResult result) throws Exception {
+    public Map<String, String> post(@RequestBody @Valid PostCreate params) throws Exception {
 
         //1. @RequestParam String title, @RequestParam String content
         //2. @RequestParam Map<String, String> params
@@ -64,20 +64,26 @@ public class PostController {
          */
 
         // @vaild를 사용했을때 client한테 에러메시지를 보내고 싶다!
-        if(result.hasErrors()){
-            List<FieldError> fieldErrors = result.getFieldErrors();
-            FieldError firstFieldError = fieldErrors.get(0);
-            String fieldName = firstFieldError.getField(); // title
-            String errorMessage = firstFieldError.getDefaultMessage(); // error msg
-
-            Map<String, String> error = new HashMap<>();
-            error.put(fieldName, errorMessage);
-
-            // Body = {"title":"must not be blank"}
-            // getDefaultMessage => message = "타이블을 입력해주세요."
-
-            return error;
-        }
+        // => 일단, 구현은 했지만, 아래의 코드는 문제가 있다!!!
+        // 1. 에러 검증이 있을때마다 추가를 해야한다.
+        // 2. 검증 부분에서 버그가 발생할 여지가 있다.
+        // 3. 응답값에 HashMap을 사용했다 -> 응답 클래스를 만들어주는게 좋다.
+        // 4. 여러개의 응답처리가 힘들다.
+        // => @ControllerAdvice 추가  , BindingResult result 제거
+//        if(result.hasErrors()){
+//            List<FieldError> fieldErrors = result.getFieldErrors();
+//            FieldError firstFieldError = fieldErrors.get(0);
+//            String fieldName = firstFieldError.getField(); // title
+//            String errorMessage = firstFieldError.getDefaultMessage(); // error msg
+//
+//            Map<String, String> error = new HashMap<>();
+//            error.put(fieldName, errorMessage);
+//
+//            // Body = {"title":"must not be blank"}
+//            // getDefaultMessage => message = "타이블을 입력해주세요."
+//
+//            return error;
+//        }
         return Map.of();
     }
 }
