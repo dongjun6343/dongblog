@@ -1,7 +1,9 @@
 package com.dongblog.api.controller;
 
 import com.dongblog.api.request.PostCreate;
+import com.dongblog.api.service.PostService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -14,7 +16,11 @@ import java.util.Map;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 public class PostController {
+
+    private final PostService postService;
+
     // SSR -> jsp, thymeleaf, mustache, freemarker
             // -> html rendering
     // SPA
@@ -39,10 +45,6 @@ public class PostController {
         //2. @RequestParam Map<String, String> params
         // -> String title = params.get("title");
         //3. dto 생성
-        log.info("params={}", params.toString());
-
-
-
         /**
          *   데이터를 검증하는 이유
          *          1. client 개발자가 실수로 값을 안보낼 수 있다.
@@ -84,6 +86,18 @@ public class PostController {
 //
 //            return error;
 //        }
+
+        log.info("params={}", params.toString());
+
+
+
+
+        return Map.of();
+    }
+
+    @PostMapping("/write")
+    public Map<String, String> write(@RequestBody @Valid PostCreate params) throws Exception {
+        postService.write(params);
         return Map.of();
     }
 }
