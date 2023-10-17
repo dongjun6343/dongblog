@@ -1,5 +1,6 @@
 package com.dongblog.api.response;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -27,6 +28,12 @@ public class ErrorResponse {
 
     // map을 사용하는것은 지양 -> 개선하는 방법에 대해서 생각해보자.
     private final Map<String, String> validation = new HashMap<>();
+
+    @Builder
+    public ErrorResponse(String code, String message) {
+        this.code = code;
+        this.message = message;
+    }
 
     public void addValidation(String fieldName, String errorMessage) {
         this.validation.put(fieldName, errorMessage);

@@ -2,10 +2,7 @@ package com.dongblog.api.domain;
 
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 
 @Entity
@@ -21,6 +18,7 @@ public class Post {
     @Lob
     private String content;
 
+    @Builder
     public Post(String title, String content) {
         this.title = title;
         this.content = content;

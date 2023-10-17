@@ -96,8 +96,16 @@ public class PostController {
     }
 
     @PostMapping("/write")
-    public Map<String, String> write(@RequestBody @Valid PostCreate params) throws Exception {
+    public void write(@RequestBody @Valid PostCreate params) throws Exception {
         postService.write(params);
-        return Map.of();
+        // return Map.of();
+
+        // case 1 . 저장한 데이터 엔티티 -> response로 응답하기.
+        // case 2. 저장한 데이터 primary_id -> response로 응답하기.
+        // case 3.
+        // post에서 응답을 안준다.(나이스한 케이스) -> Http 상태코드! ( Post 요청 : 200, 201 )
+        //  => 응답 필요 없음 -> 클라이언트에서 모든 POST(글) 데이터 context를 잘 관리함.
+
+        // Bad Case : 서버에서 반드시 ~ 할겁니다.! -> 서버에서는 유연하게 대응하자.
     }
 }

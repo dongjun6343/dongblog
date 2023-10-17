@@ -2,7 +2,8 @@ package com.dongblog.api.controller;
 
 import com.dongblog.api.domain.Post;
 import com.dongblog.api.repository.PostRepository;
-import org.junit.jupiter.api.Assertions;
+import com.dongblog.api.request.PostCreate;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class PostControllerTest {
 
     @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
     private MockMvc mockMvc;
 
     @Autowired
@@ -38,8 +42,17 @@ class PostControllerTest {
     @Test
     @DisplayName("/posts 요청 시 Hello World를 출력한다.")
     void test() throws Exception {
-        // 글 제목
-        // 글 내용
+
+        // given
+        // PostCreate request = new PostCreate("글 제목입니다.", "글 내용입니다.");
+        // 생성자의 파라미터 순서가 바뀌면 버그를 찾기 힘들다 -> 빌더패턴 사용!
+
+        PostCreate request = PostCreate.builder()
+                .title("글 제목입니다.")
+                .content("글 내용입니다.")
+                .build();
+
+        String json = objectMapper.writeValueAsString(request);
 
         // expected
         mockMvc.perform(post("/posts")
@@ -54,7 +67,8 @@ class PostControllerTest {
                         // json으로 변경하자! Body에 값이 들어감 -> 따라서 controller에서 @RequestBody추가.
                         // Body = {"title": "글 제목입니다.", "content": "글 내용입니다."}
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"title\": \"글 제목입니다.\", \"content\": \"글 내용입니다.\"}"))
+                        .content(json)
+                )
                 .andExpect(status().isOk())
                 .andExpect(content().string("Hello World"))
                 .andDo(print());
