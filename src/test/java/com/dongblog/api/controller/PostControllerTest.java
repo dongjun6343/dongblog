@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -123,28 +122,26 @@ class PostControllerTest {
     @Test
     @DisplayName("글 1개 조회")
     void test4() throws Exception {
-
-        //given
+        // given
         Post post = Post.builder()
                 .title("foo")
                 .content("bar")
                 .build();
         postRepository.save(post);
 
-        //expected
+
+
+        // 클라이언트 요구사항
+        // json 응답에서 title값 길이를 최대 10글자로 해주세요. ( 보통은 클라이언트에서 하는게 맞긴 함 )
+
+
+        // expected
         mockMvc.perform(get("/posts/{postId}", post.getId())
-                .contentType(APPLICATION_JSON))
+                        .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(post.getId()))
                 .andExpect(jsonPath("$.title").value("foo"))
                 .andExpect(jsonPath("$.content").value("bar"))
                 .andDo(print());
-
-
-
-
-        //then
-
-
     }
 }

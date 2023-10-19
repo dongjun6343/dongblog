@@ -1,16 +1,12 @@
 package com.dongblog.api.controller;
 
+import com.dongblog.api.domain.Post;
 import com.dongblog.api.request.PostCreate;
 import com.dongblog.api.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -110,7 +106,8 @@ public class PostController {
     }
 
     @GetMapping("/posts/{postId}")
-    public void get(@PathVariable(name = "postId") Long id){
-        postService.get(id);
+    public Post get(@PathVariable Long postId){
+        Post post = postService.get(postId);
+        return post;
     }
 }
