@@ -2,6 +2,7 @@ package com.dongblog.api.controller;
 
 import com.dongblog.api.domain.Post;
 import com.dongblog.api.request.PostCreate;
+import com.dongblog.api.response.PostResponse;
 import com.dongblog.api.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -106,8 +107,8 @@ public class PostController {
     }
 
     @GetMapping("/posts/{postId}")
-    public Post get(@PathVariable Long postId){
-        Post post = postService.get(postId);
-        return post;
+    public PostResponse get(@PathVariable Long postId){
+        PostResponse response = postService.get(postId);
+        return response;
     }
 }

@@ -129,11 +129,8 @@ class PostControllerTest {
                 .build();
         postRepository.save(post);
 
-
-
         // 클라이언트 요구사항
         // json 응답에서 title값 길이를 최대 10글자로 해주세요. ( 보통은 클라이언트에서 하는게 맞긴 함 )
-
 
         // expected
         mockMvc.perform(get("/posts/{postId}", post.getId())

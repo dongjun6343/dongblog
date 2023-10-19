@@ -3,6 +3,7 @@ package com.dongblog.api.service;
 import com.dongblog.api.domain.Post;
 import com.dongblog.api.repository.PostRepository;
 import com.dongblog.api.request.PostCreate;
+import com.dongblog.api.response.PostResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -64,7 +65,7 @@ class PostServiceTest {
         // Long postId = 1L; 해당 글을 위에서 저장해줘야 한다.
 
         //when
-        Post post = postService.get(requestPost.getId());
+        PostResponse post = postService.get(requestPost.getId());
 
         //then
         assertNotNull(post);
