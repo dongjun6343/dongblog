@@ -20,7 +20,6 @@ import java.util.Map;
 
 
 @Getter
-@RequiredArgsConstructor
 public class ErrorResponse {
 
     private final String code;

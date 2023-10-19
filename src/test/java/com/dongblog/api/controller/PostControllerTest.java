@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.http.MediaType.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -66,7 +67,7 @@ class PostControllerTest {
 
                         // json으로 변경하자! Body에 값이 들어감 -> 따라서 controller에서 @RequestBody추가.
                         // Body = {"title": "글 제목입니다.", "content": "글 내용입니다."}
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(APPLICATION_JSON)
                         .content(json)
                 )
                 .andExpect(status().isOk())
@@ -92,7 +93,7 @@ class PostControllerTest {
     void test1() throws Exception {
         // expected
         mockMvc.perform(post("/posts")
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(APPLICATION_JSON)
                         .content("{\"title\": \"\", \"content\": \"글 내용입니다.\"}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("400"))
@@ -106,7 +107,7 @@ class PostControllerTest {
     void test2() throws Exception {
         // when
         mockMvc.perform(post("/write")
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(APPLICATION_JSON)
                         .content("{\"title\": \"제목입니다.\", \"content\": \"글 내용입니다.\"}"))
                 .andExpect(status().isOk())
                 .andDo(print());
@@ -118,4 +119,32 @@ class PostControllerTest {
         assertEquals("글 내용입니다.", post.getContent());
     }
     // @SpringBootTest -> controller - service - repository 레이어 추가를 했기 때문에 변경이 필요.
+
+    @Test
+    @DisplayName("글 1개 조회")
+    void test4() throws Exception {
+
+        //given
+        Post post = Post.builder()
+                .title("foo")
+                .content("bar")
+                .build();
+        postRepository.save(post);
+
+        //expected
+        mockMvc.perform(get("/posts/{postId}", post.getId())
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(post.getId()))
+                .andExpect(jsonPath("$.title").value("foo"))
+                .andExpect(jsonPath("$.content").value("bar"))
+                .andDo(print());
+
+
+
+
+        //then
+
+
+    }
 }

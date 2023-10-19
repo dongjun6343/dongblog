@@ -108,4 +108,9 @@ public class PostController {
 
         // Bad Case : 서버에서 반드시 ~ 할겁니다.! -> 서버에서는 유연하게 대응하자.
     }
+
+    @GetMapping("/posts/{postId}")
+    public void get(@PathVariable(name = "postId") Long id){
+        postService.get(id);
+    }
 }
