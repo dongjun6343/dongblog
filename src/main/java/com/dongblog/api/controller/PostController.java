@@ -1,6 +1,5 @@
 package com.dongblog.api.controller;
 
-import com.dongblog.api.domain.Post;
 import com.dongblog.api.request.PostCreate;
 import com.dongblog.api.response.PostResponse;
 import com.dongblog.api.service.PostService;
@@ -8,6 +7,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import java.util.Map;
 
 
@@ -26,10 +27,10 @@ public class PostController {
             // -> javascript <---> API (json)
 
     // @RequestMapping(method = RequestMethod.GET, path = "v1/posts") 에전 방식
-    @GetMapping("/posts")
-    public String get(){
-        return "Hello World";
-    }
+//    @GetMapping("/posts")
+//    public String get(){
+//        return "Hello World";
+//    }
 
 
     // Http Method
@@ -111,4 +112,12 @@ public class PostController {
         PostResponse response = postService.get(postId);
         return response;
     }
+
+    // 여러 개의 글을 조회하는 API -> 게시글 목록
+    // /posts
+    @GetMapping("/posts")
+    public List<PostResponse> getList(){
+        return postService.getList();
+    }
+
 }
