@@ -4,6 +4,8 @@ import com.dongblog.api.domain.Post;
 import com.dongblog.api.repository.PostRepository;
 import com.dongblog.api.request.PostCreate;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.Matcher;
+import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,6 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.http.MediaType.*;
@@ -173,4 +179,28 @@ class PostControllerTest {
                 .andExpect(jsonPath("$[0].content").value("bar1"))
                 .andDo(print());
     }
+
+    @Test
+    @DisplayName("글 1페이지 조회")
+    void test6() throws Exception {
+        // given
+        List<Post> requestPosts = IntStream.range(1, 31)
+                .mapToObj(i -> Post.builder()
+                        .title("동준 블로그 제목 " + i)
+                        .content("동동동준준준 " + i)
+                        .build())
+                .collect(Collectors.toList());
+        postRepository.saveAll(requestPosts);
+
+        // expected
+        mockMvc.perform(get("/posts?page=1&sort=id,desc") // &size=5 -> yml에서 설정
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()", Matchers.is(5)))
+                .andExpect(jsonPath("$[0].id").value(30))
+                .andExpect(jsonPath("$[0].title").value("동준 블로그 제목 30"))
+                .andExpect(jsonPath("$[0].content").value("동동동준준준 30"))
+                .andDo(print());
+    }
+
 }

@@ -7,6 +7,9 @@ import com.dongblog.api.request.PostCreate;
 import com.dongblog.api.response.PostResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,15 +49,25 @@ public class PostService {
     }
 
 
-    public List<PostResponse> getList() {
+    // 글이 너무 많은 경우 -> 비용이 너무 많이 든다.
+    // DB 글을 모두 조회하는 경우 -> DB가 뻗을 수 있다.
+
+    public List<PostResponse> getList(Pageable pageable) {
+
 //        return postRepository.findAll().stream()
 //                .map(post -> PostResponse.builder()
 //                        .id(post.getId())
 //                        .title(post.getTitle())
 //                        .content(post.getContent()).build())
 //                .collect(Collectors.toList());
-                return postRepository.findAll().stream()
-                        .map(PostResponse::new)
-                        .collect(Collectors.toList());
+
+        // web -> page 1 -> 0(내부적으로 변경)
+        // Pageable pageable = PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC,"id"));
+
+        return postRepository.findAll(pageable).stream()
+                .map(PostResponse::new)
+                .collect(Collectors.toList());
     }
+
+
 }

@@ -9,8 +9,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -107,10 +112,34 @@ class PostServiceTest {
 
 
         //when
-        List<PostResponse> list = postService.getList();
+        // List<PostResponse> list = postService.getList(1);
 
         //then
-        assertEquals(2L, list.size());
+        // assertEquals(2L, list.size());
+    }
+
+    @Test
+    @DisplayName("글 1페이지 조회")
+    void test4() {
+        //given
+        List<Post> requestPosts = IntStream.range(1, 31)
+                        .mapToObj(i -> Post.builder()
+                                .title("동준 블로그 제목 " + i)
+                                .content("동동동준준준 " + i)
+                                .build())
+                                .collect(Collectors.toList());
+
+        postRepository.saveAll(requestPosts);
+
+        Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "id");
+
+        //when
+        List<PostResponse> list = postService.getList(pageable);
+
+        //then
+        assertEquals(5L, list.size());
+        assertEquals("동준 블로그 제목 30" , list.get(0).getTitle()); // 내림차순.
+        assertEquals("동준 블로그 제목 26" , list.get(4).getTitle());
     }
 
 }
