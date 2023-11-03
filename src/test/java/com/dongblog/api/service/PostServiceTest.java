@@ -3,6 +3,7 @@ package com.dongblog.api.service;
 import com.dongblog.api.domain.Post;
 import com.dongblog.api.repository.PostRepository;
 import com.dongblog.api.request.PostCreate;
+import com.dongblog.api.request.PostSearch;
 import com.dongblog.api.response.PostResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -122,7 +123,7 @@ class PostServiceTest {
     @DisplayName("글 1페이지 조회")
     void test4() {
         //given
-        List<Post> requestPosts = IntStream.range(1, 31)
+        List<Post> requestPosts = IntStream.range(0, 20)
                         .mapToObj(i -> Post.builder()
                                 .title("동준 블로그 제목 " + i)
                                 .content("동동동준준준 " + i)
@@ -131,15 +132,19 @@ class PostServiceTest {
 
         postRepository.saveAll(requestPosts);
 
-        Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "id");
+        PostSearch postSearch = PostSearch.builder()
+                .page(1)
+                .size(10)
+                .build();
 
         //when
-        List<PostResponse> list = postService.getList(pageable);
+        List<PostResponse> list = postService.getList(postSearch);
 
         //then
-        assertEquals(5L, list.size());
-        assertEquals("동준 블로그 제목 30" , list.get(0).getTitle()); // 내림차순.
-        assertEquals("동준 블로그 제목 26" , list.get(4).getTitle());
+        assertEquals(10L, list.size());
+        assertEquals("동준 블로그 제목 19" , list.get(0).getTitle()); // 내림차순.
     }
+
+
 
 }

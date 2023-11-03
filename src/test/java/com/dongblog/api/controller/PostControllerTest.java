@@ -184,7 +184,7 @@ class PostControllerTest {
     @DisplayName("글 1페이지 조회")
     void test6() throws Exception {
         // given
-        List<Post> requestPosts = IntStream.range(1, 31)
+        List<Post> requestPosts = IntStream.range(1, 20)
                 .mapToObj(i -> Post.builder()
                         .title("동준 블로그 제목 " + i)
                         .content("동동동준준준 " + i)
@@ -193,13 +193,12 @@ class PostControllerTest {
         postRepository.saveAll(requestPosts);
 
         // expected
-        mockMvc.perform(get("/posts?page=1&sort=id,desc") // &size=5 -> yml에서 설정
+        mockMvc.perform(get("/posts?page=1&size=10") // &size=5 -> yml에서 설정
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()", Matchers.is(5)))
-                .andExpect(jsonPath("$[0].id").value(30))
-                .andExpect(jsonPath("$[0].title").value("동준 블로그 제목 30"))
-                .andExpect(jsonPath("$[0].content").value("동동동준준준 30"))
+                .andExpect(jsonPath("$.length()", Matchers.is(10)))
+                .andExpect(jsonPath("$[0].title").value("동준 블로그 제목 19"))
+                .andExpect(jsonPath("$[0].content").value("동동동준준준 19"))
                 .andDo(print());
     }
 

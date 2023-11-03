@@ -1,6 +1,7 @@
 package com.dongblog.api.controller;
 
 import com.dongblog.api.request.PostCreate;
+import com.dongblog.api.request.PostSearch;
 import com.dongblog.api.response.PostResponse;
 import com.dongblog.api.service.PostService;
 import jakarta.validation.Valid;
@@ -118,8 +119,8 @@ public class PostController {
     // 여러 개의 글을 조회하는 API -> 게시글 목록
     // /posts
     @GetMapping("/posts")
-    public List<PostResponse> getList(Pageable pageable){
-        return postService.getList(pageable);
+    public List<PostResponse> getList(@ModelAttribute PostSearch postSearch){
+        return postService.getList(postSearch);
     }
 
 }
